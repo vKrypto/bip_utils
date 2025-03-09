@@ -24,7 +24,7 @@ import unittest
 
 from bip_utils import Base58ChecksumError, CoinsConf, Secp256k1PrivateKey, WifDecoder, WifEncoder, WifPubKeyModes
 from tests.ecc.test_ecc import (
-    TEST_ED25519_BLAKE2B_PRIV_KEY, TEST_ED25519_PRIV_KEY, TEST_NIST256P1_PRIV_KEY, TEST_SR25519_PRIV_KEY,
+    TEST_ED25519_BLAKE2B_PRIV_KEY, TEST_ED25519_PRIV_KEY, TEST_NIST256P1_PRIV_KEY,
     TEST_VECT_SECP256K1_PRIV_KEY_INVALID
 )
 
@@ -222,7 +222,6 @@ class WifTests(unittest.TestCase):
         self.assertRaises(TypeError, WifEncoder.Encode, TEST_ED25519_PRIV_KEY, b"\x00")
         self.assertRaises(TypeError, WifEncoder.Encode, TEST_ED25519_BLAKE2B_PRIV_KEY, b"\x00")
         self.assertRaises(TypeError, WifEncoder.Encode, TEST_NIST256P1_PRIV_KEY, b"\x00")
-        self.assertRaises(TypeError, WifEncoder.Encode, TEST_SR25519_PRIV_KEY, b"\x00")
 
         for test in TEST_VECT_SECP256K1_PRIV_KEY_INVALID:
             self.assertRaises(ValueError, WifEncoder.Encode, binascii.unhexlify(test), b"\x00")

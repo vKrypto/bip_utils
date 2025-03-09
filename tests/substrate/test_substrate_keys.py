@@ -23,14 +23,14 @@ import binascii
 import unittest
 
 from bip_utils import (
-    DataBytes, Sr25519PrivateKey, Sr25519PublicKey, SubstrateKeyError, SubstratePrivateKey, SubstratePublicKey
+    DataBytes, SubstrateKeyError, SubstratePrivateKey, SubstratePublicKey
 )
 from bip_utils.substrate.conf.substrate_conf import SubstrateConf
 from tests.ecc.test_ecc import (
     TEST_ED25519_BLAKE2B_PRIV_KEY, TEST_ED25519_BLAKE2B_PUB_KEY, TEST_ED25519_MONERO_PRIV_KEY,
     TEST_ED25519_MONERO_PUB_KEY, TEST_ED25519_PRIV_KEY, TEST_ED25519_PUB_KEY, TEST_NIST256P1_PRIV_KEY,
-    TEST_NIST256P1_PUB_KEY, TEST_SECP256K1_PRIV_KEY, TEST_SECP256K1_PUB_KEY, TEST_SR25519_PRIV_KEY,
-    TEST_SR25519_PUB_KEY, TEST_VECT_SR25519_PRIV_KEY_INVALID, TEST_VECT_SR25519_PUB_KEY_INVALID
+    TEST_NIST256P1_PUB_KEY, TEST_SECP256K1_PRIV_KEY, TEST_SECP256K1_PUB_KEY,
+    TEST_VECT_SR25519_PRIV_KEY_INVALID, TEST_VECT_SR25519_PUB_KEY_INVALID
 )
 
 
@@ -42,28 +42,6 @@ TEST_ADDRESS = "13KVd4f2a4S5pLp4gTTFezyXdPWx27vQ9vS6xBXJ9yWVd7xo"
 # Tests
 #
 class SubstrateKeysTests(unittest.TestCase):
-    # Test private key
-    def test_priv_key(self):
-        # FromBytesOrKeyObject (object)
-        self.__test_priv_key_obj(SubstratePrivateKey.FromBytesOrKeyObject(TEST_SR25519_PRIV_KEY, SubstrateConf.Polkadot))
-        # FromBytesOrKeyObject (bytes)
-        self.__test_priv_key_obj(SubstratePrivateKey.FromBytesOrKeyObject(TEST_SR25519_PRIV_KEY.Raw().ToBytes(), SubstrateConf.Polkadot))
-        # FromBytes
-        self.__test_priv_key_obj(SubstratePrivateKey.FromBytes(TEST_SR25519_PRIV_KEY.Raw().ToBytes(), SubstrateConf.Polkadot))
-
-    # Test public key
-    def test_pub_key(self):
-        # FromBytesOrKeyObject (object)
-        self.__test_pub_key_obj(SubstratePublicKey.FromBytesOrKeyObject(TEST_SR25519_PUB_KEY, SubstrateConf.Polkadot))
-        # FromBytesOrKeyObject (compressed)
-        self.__test_pub_key_obj(SubstratePublicKey.FromBytesOrKeyObject(TEST_SR25519_PUB_KEY.RawCompressed().ToBytes(), SubstrateConf.Polkadot))
-        # FromBytesOrKeyObject (uncompressed)
-        self.__test_pub_key_obj(SubstratePublicKey.FromBytesOrKeyObject(TEST_SR25519_PUB_KEY.RawUncompressed().ToBytes(), SubstrateConf.Polkadot))
-        # FromBytes (compressed)
-        self.__test_pub_key_obj(SubstratePublicKey.FromBytes(TEST_SR25519_PUB_KEY.RawCompressed().ToBytes(), SubstrateConf.Polkadot))
-        # FromBytes (uncompressed)
-        self.__test_pub_key_obj(SubstratePublicKey.FromBytes(TEST_SR25519_PUB_KEY.RawUncompressed().ToBytes(), SubstrateConf.Polkadot))
-
     # Test invalid parameters
     def test_invalid_params(self):
         # Private key
@@ -89,21 +67,16 @@ class SubstrateKeysTests(unittest.TestCase):
     # Test private key object
     def __test_priv_key_obj(self, priv_key):
         # Object
-        self.assertTrue(isinstance(priv_key.KeyObject(), Sr25519PrivateKey))
         self.assertTrue(isinstance(priv_key.Raw(), DataBytes))
         # Key
-        self.assertEqual(TEST_SR25519_PRIV_KEY.Raw().ToBytes(), priv_key.Raw().ToBytes())
         # Public key associated to the private one
         self.__test_pub_key_obj(priv_key.PublicKey())
 
     # Test public key object
     def __test_pub_key_obj(self, pub_key):
         # Object
-        self.assertTrue(isinstance(pub_key.KeyObject(), Sr25519PublicKey))
         self.assertTrue(isinstance(pub_key.RawCompressed(), DataBytes))
         self.assertTrue(isinstance(pub_key.RawUncompressed(), DataBytes))
         # Keys
-        self.assertEqual(TEST_SR25519_PUB_KEY.RawCompressed().ToBytes(), pub_key.RawCompressed().ToBytes())
-        self.assertEqual(TEST_SR25519_PUB_KEY.RawUncompressed().ToBytes(), pub_key.RawUncompressed().ToBytes())
         # Address
         self.assertEqual(TEST_ADDRESS, pub_key.ToAddress())

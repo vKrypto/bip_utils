@@ -23,13 +23,12 @@ import binascii
 import unittest
 
 from bip_utils import (
-    Sr25519PrivateKey, Sr25519PublicKey, Substrate, SubstrateCoins, SubstrateKeyError, SubstratePath, SubstratePathElem,
+    SubstrateCoins, SubstrateKeyError, SubstratePath, SubstratePathElem,
     SubstratePrivateKey, SubstratePublicKey
 )
 from bip_utils.substrate.conf import SubstrateCoinConf
-from bip_utils.substrate.substrate import SubstrateConst
 from tests.ecc.test_ecc import (
-    TEST_SR25519_PRIV_KEY, TEST_SR25519_PUB_KEY, TEST_VECT_SR25519_PRIV_KEY_INVALID, TEST_VECT_SR25519_PUB_KEY_INVALID
+    TEST_VECT_SR25519_PRIV_KEY_INVALID, TEST_VECT_SR25519_PUB_KEY_INVALID
 )
 
 
@@ -502,131 +501,12 @@ TEST_VECT_PUBLIC_DER = {
     ],
 }
 
-# Invalid seed
-TEST_SEED_ERR = b"\x00" * (SubstrateConst.SEED_MIN_BYTE_LEN - 1)
-# Generic seed for testing
-TEST_SEED = b"\x00" * SubstrateConst.SEED_MIN_BYTE_LEN
-
-
 #
 # Tests
 #
 class SubstrateTests(unittest.TestCase):
-    # Run all tests in test vector using FromSeed for construction
-    def test_from_seed(self):
-        for test in TEST_VECT:
-            # Create from seed
-            substrate_ctx = Substrate.FromSeed(binascii.unhexlify(test["seed"]), test["coin"])
-
-            # Test coin configuration
-            self.assertTrue(isinstance(substrate_ctx.CoinConf(), SubstrateCoinConf))
-
-            # Test coin names
-            coin_names = substrate_ctx.CoinConf().CoinNames()
-            self.assertEqual(test["names"], (coin_names.Name(), coin_names.Abbreviation()))
-
-            # Test object
-            self.__test_substrate_obj(substrate_ctx, test["master"], False)
-
-            # Test derivation paths
-            for der_path in test["der_paths"]:
-                substrate_ctx = substrate_ctx.ChildKey(der_path["path_elem"])
-                self.__test_substrate_obj(substrate_ctx, der_path, False)
-
-    # Run all tests in test vector using FromSeed for construction and DerivePath for derivation
-    def test_from_seed_with_derive_path(self):
-        for test in TEST_VECT:
-            # Create from seed
-            substrate_ctx = Substrate.FromSeed(binascii.unhexlify(test["seed"]), test["coin"])
-
-            # Test derivation paths
-            for der_path in test["der_paths"]:
-                substrate_ctx = substrate_ctx.DerivePath(der_path["path_elem"])
-                self.__test_substrate_obj(substrate_ctx, der_path, False)
-
-    # Run all tests in test vector using FromSeedAndPath for construction
-    def test_from_seed_and_path(self):
-        for test in TEST_VECT:
-            # Create from seed
-            substrate_ctx = Substrate.FromSeedAndPath(binascii.unhexlify(test["seed"]), "", test["coin"])
-            # Test object
-            self.__test_substrate_obj(substrate_ctx, test["master"], False)
-
-            # Test derivation paths
-            for der_path in test["der_paths"]:
-                substrate_ctx = Substrate.FromSeedAndPath(binascii.unhexlify(test["seed"]), der_path["path"], test["coin"])
-                self.__test_substrate_obj(substrate_ctx, der_path, False)
 
     # Run all tests in test vector using FromPrivateKey for construction
-    def test_from_private_key(self):
-        for test in TEST_VECT:
-            priv_key_bytes = binascii.unhexlify(test["master"]["priv_key"])
-
-            # Test both from bytes and key object
-            self.__test_from_private_key(test, priv_key_bytes)
-            self.__test_from_private_key(test, Sr25519PrivateKey(priv_key_bytes))
-
-    # Test public derivation
-    def test_public_derivation(self):
-        test_vect = TEST_VECT_PUBLIC_DER
-
-        # Create from public key
-        pub_key_bytes = binascii.unhexlify(test_vect["master"]["pub_key"])
-        # Bytes
-        substrate_ctx = Substrate.FromPublicKey(pub_key_bytes, test_vect["coin"])
-        self.__test_public_derivation(test_vect, substrate_ctx)
-        # Key object
-        substrate_ctx = Substrate.FromPublicKey(Sr25519PublicKey(pub_key_bytes), test_vect["coin"])
-        self.__test_public_derivation(test_vect, substrate_ctx)
-
-        # Create from private key and convert to public
-        substrate_ctx = Substrate.FromPrivateKey(binascii.unhexlify(test_vect["master"]["priv_key"]), test_vect["coin"])
-        substrate_ctx.ConvertToPublic()
-        self.__test_public_derivation(test_vect, substrate_ctx)
-
-    # Test addresses of other coins
-    def test_coins_addr(self):
-        for test in TEST_VECT_ADDR:
-            # Create from seed
-            substrate_ctx = Substrate.FromSeed(binascii.unhexlify(test["seed"]), test["coin"])
-
-            # Test coin names
-            coin_names = substrate_ctx.CoinConf().CoinNames()
-            self.assertEqual(test["names"], (coin_names.Name(), coin_names.Abbreviation()))
-
-            # Test derivation paths
-            for der_path in test["der_paths"]:
-                substrate_ctx = substrate_ctx.DerivePath(der_path["path_elem"])
-                self.assertEqual(der_path["address"], substrate_ctx.PublicKey().ToAddress())
-
-    # Test invalid seed
-    def test_invalid_seed(self):
-        self.assertRaises(ValueError, Substrate.FromSeed, TEST_SEED_ERR, SubstrateCoins.POLKADOT)
-
-    # Test invalid parameters
-    def test_invalid_params(self):
-        self.assertRaises(TypeError, Substrate.FromSeed, TEST_SEED, 0)
-        self.assertRaises(TypeError, Substrate.FromSeedAndPath, TEST_SEED, 0)
-        self.assertRaises(TypeError, Substrate.FromPrivateKey, TEST_SR25519_PRIV_KEY, 0)
-        self.assertRaises(TypeError, Substrate.FromPublicKey, TEST_SR25519_PUB_KEY, 0)
-
-        for test in TEST_VECT_SR25519_PUB_KEY_INVALID:
-            self.assertRaises(SubstrateKeyError, Substrate.FromPublicKey, binascii.unhexlify(test), SubstrateCoins.POLKADOT)
-        for test in TEST_VECT_SR25519_PRIV_KEY_INVALID:
-            self.assertRaises(SubstrateKeyError, Substrate.FromPrivateKey, binascii.unhexlify(test), SubstrateCoins.POLKADOT)
-
-    # Test from private key
-    def __test_from_private_key(self, test, priv_key):
-        # Create from key
-        substrate_ctx = Substrate.FromPrivateKey(priv_key, test["coin"])
-        # Test object
-        self.__test_substrate_obj(substrate_ctx, test["master"], False)
-
-        # Test derivation paths
-        for der_path in test["der_paths"]:
-            substrate_ctx = substrate_ctx.DerivePath(der_path["path_elem"])
-            self.__test_substrate_obj(substrate_ctx, der_path, False)
-
     # Test public derivation
     def __test_public_derivation(self, test, substrate_ctx):
         # Test object

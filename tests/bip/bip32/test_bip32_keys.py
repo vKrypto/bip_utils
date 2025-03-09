@@ -68,13 +68,7 @@ TEST_PUB_KEYS = [
         "fprint": b"e168bdf4",
         "key_id": b"e168bdf4a501ed739b5a94731bd13d0044efd7c7",
         "ext": "xpub661MyMwAqRbcEYS8w7XLSVeEsBXy79zSzH1J8vCdxAZningWLdN3zgtU6RZYJkUia7CG7jyT3sA25TNNT1zXNBYE2YmshUj7TZbuFCYsVZf",
-    },
-    {
-        "key": TEST_SR25519_PUB_KEY,
-        "fprint": b"7bde84a2",
-        "key_id": b"7bde84a21e328728228f4fc69a24f57d85f7d1a4",
-        "ext": "Deb7pNXSbX7qSvc2e43XLxrU4Wbif71fzakq2ecQpZSkGDbATEXFMJkjpWRoUpFrrfLeLKYGpWEcqZeSUxdBe1GVs4vezvdnpmQYUfu3JPRUhT",
-    },
+    }
 ]
 
 # Private keys for testing

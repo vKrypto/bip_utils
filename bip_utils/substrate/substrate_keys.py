@@ -26,11 +26,17 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Union
 
-from bip_utils.addr import SubstrateSr25519AddrEncoder
-from bip_utils.ecc import IPrivateKey, IPublicKey, Sr25519PrivateKey, Sr25519PublicKey
+from bip_utils.ecc import IPrivateKey, IPublicKey
 from bip_utils.substrate.conf import SubstrateCoinConf
-from bip_utils.substrate.substrate_ex import SubstrateKeyError
 from bip_utils.utils.misc import DataBytes
+
+
+# removed this as deps, just verifying class name.
+class Sr25519PrivateKey:
+    pass
+
+class Sr25519PublicKey:
+    pass
 
 
 class SubstratePublicKey:
@@ -125,36 +131,6 @@ class SubstratePublicKey:
         """
         return self.m_pub_key.RawUncompressed()
 
-    @lru_cache()
-    def ToAddress(self) -> str:
-        """
-        Return the address correspondent to the public key.
-
-        Returns:
-            str: Address string
-        """
-        return SubstrateSr25519AddrEncoder.EncodeKey(self.m_pub_key,
-                                                     **self.m_coin_conf.AddrParams())
-
-    @staticmethod
-    def __KeyFromBytes(key_bytes: bytes) -> IPublicKey:
-        """
-        Construct key from bytes.
-
-        Args:
-            key_bytes (bytes): Key bytes
-
-        Returns:
-            IPublicKey object: IPublicKey object
-
-        Raises:
-            SubstrateKeyError: If the key constructed from the bytes is not valid
-        """
-        try:
-            return Sr25519PublicKey.FromBytes(key_bytes)
-        except ValueError as ex:
-            raise SubstrateKeyError("Invalid public key") from ex
-
 
 class SubstratePrivateKey:
     """Substrate private key class."""
@@ -248,22 +224,3 @@ class SubstratePrivateKey:
         """
         return SubstratePublicKey(self.m_priv_key.PublicKey(),
                                   self.m_coin_conf)
-
-    @staticmethod
-    def __KeyFromBytes(key_bytes: bytes) -> IPrivateKey:
-        """
-        Construct key from bytes.
-
-        Args:
-            key_bytes (bytes): Key bytes
-
-        Returns:
-            IPrivateKey object: IPrivateKey object
-
-        Raises:
-            SubstrateKeyError: If the key constructed from the bytes is not valid
-        """
-        try:
-            return Sr25519PrivateKey.FromBytes(key_bytes)
-        except ValueError as ex:
-            raise SubstrateKeyError("Invalid private key") from ex

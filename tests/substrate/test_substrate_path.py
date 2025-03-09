@@ -23,9 +23,8 @@ import binascii
 import unittest
 
 from bip_utils import (
-    Substrate, SubstrateCoins, SubstratePath, SubstratePathElem, SubstratePathError, SubstratePathParser
+    SubstrateCoins, SubstratePath, SubstratePathElem, SubstratePathError, SubstratePathParser
 )
-from tests.substrate.test_substrate import TEST_SEED
 
 
 # Tests for path elements
@@ -203,9 +202,6 @@ class SubstratePathTests(unittest.TestCase):
     def test_invalid_path(self):
         for test in TEST_VECT_PATH_INVALID:
             self.assertRaises(SubstratePathError, SubstratePathParser.Parse, test)
-
-            self.assertRaises(SubstratePathError, Substrate.FromSeed(TEST_SEED, SubstrateCoins.POLKADOT).DerivePath, test)
-            self.assertRaises(SubstratePathError, Substrate.FromSeedAndPath, TEST_SEED, test, SubstrateCoins.POLKADOT)
 
     # Test invalid path elements
     def test_invalid_path_elem(self):

@@ -31,7 +31,6 @@ from bip_utils.ecc.ed25519_kholaw.ed25519_kholaw import Ed25519Kholaw
 from bip_utils.ecc.ed25519_monero.ed25519_monero import Ed25519Monero
 from bip_utils.ecc.nist256p1.nist256p1 import Nist256p1
 from bip_utils.ecc.secp256k1.secp256k1 import Secp256k1
-from bip_utils.ecc.sr25519.sr25519 import Sr25519
 
 
 class EllipticCurveGetterConst:
@@ -45,7 +44,6 @@ class EllipticCurveGetterConst:
         EllipticCurveTypes.ED25519_MONERO: Ed25519Monero,
         EllipticCurveTypes.NIST256P1: Nist256p1,
         EllipticCurveTypes.SECP256K1: Secp256k1,
-        EllipticCurveTypes.SR25519: Sr25519,
     }
 
 

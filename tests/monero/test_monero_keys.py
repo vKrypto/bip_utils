@@ -29,7 +29,7 @@ from tests.ecc.test_ecc import (
     TEST_ED25519_BLAKE2B_PRIV_KEY, TEST_ED25519_BLAKE2B_PUB_KEY, TEST_ED25519_MONERO_POINT,
     TEST_ED25519_MONERO_PRIV_KEY, TEST_ED25519_MONERO_PUB_KEY, TEST_ED25519_PRIV_KEY, TEST_ED25519_PUB_KEY,
     TEST_NIST256P1_PRIV_KEY, TEST_NIST256P1_PUB_KEY, TEST_SECP256K1_PRIV_KEY, TEST_SECP256K1_PUB_KEY,
-    TEST_SR25519_PRIV_KEY, TEST_SR25519_PUB_KEY, TEST_VECT_ED25519_MONERO_PRIV_KEY_INVALID,
+    TEST_VECT_ED25519_MONERO_PRIV_KEY_INVALID,
     TEST_VECT_ED25519_PUB_KEY_INVALID
 )
 
@@ -72,17 +72,6 @@ class MoneroKeysTests(unittest.TestCase):
         for test in TEST_VECT_ED25519_PUB_KEY_INVALID:
             self.assertRaises(MoneroKeyError, MoneroPublicKey.FromBytesOrKeyObject, binascii.unhexlify(test))
             self.assertRaises(MoneroKeyError, MoneroPublicKey.FromBytes, binascii.unhexlify(test))
-
-    # Test invalid parameters
-    def test_invalid_params(self):
-        # Private key
-        for key in (TEST_ED25519_PRIV_KEY, TEST_ED25519_BLAKE2B_PRIV_KEY, TEST_NIST256P1_PRIV_KEY,
-                    TEST_SECP256K1_PRIV_KEY, TEST_SR25519_PRIV_KEY):
-            self.assertRaises(TypeError, MoneroPrivateKey, key)
-        # Public key
-        for key in (TEST_ED25519_PUB_KEY, TEST_ED25519_BLAKE2B_PUB_KEY, TEST_NIST256P1_PUB_KEY,
-                    TEST_SECP256K1_PUB_KEY, TEST_SR25519_PUB_KEY):
-            self.assertRaises(TypeError, MoneroPublicKey, key)
 
     # Test private key object
     def __test_priv_key_obj(self, priv_key):

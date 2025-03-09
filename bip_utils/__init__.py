@@ -1,4 +1,7 @@
-# Version
+# BIP32
+from bip_utils.bip.bip32.slip10.bip32_slip10_ed25519 import Bip32Slip10Ed25519
+# BIP39
+from bip_utils.bip.bip39 import Bip39SeedGenerator # Version
 from bip_utils._version import __version__
 
 # Address decoding/encoding
@@ -19,8 +22,8 @@ from bip_utils.addr import (
     OkexAddr, OkexAddrDecoder, OkexAddrEncoder, OneAddr, OneAddrDecoder, OneAddrEncoder, P2PKHAddr, P2PKHAddrDecoder,
     P2PKHAddrEncoder, P2PKHPubKeyModes, P2SHAddr, P2SHAddrDecoder, P2SHAddrEncoder, P2TRAddr, P2TRAddrDecoder,
     P2TRAddrEncoder, P2WPKHAddr, P2WPKHAddrDecoder, P2WPKHAddrEncoder, SolAddr, SolAddrDecoder, SolAddrEncoder,
-    SubstrateEd25519Addr, SubstrateEd25519AddrDecoder, SubstrateEd25519AddrEncoder, SubstrateSr25519Addr,
-    SubstrateSr25519AddrDecoder, SubstrateSr25519AddrEncoder, SuiAddr, SuiAddrDecoder, SuiAddrEncoder, TrxAddr,
+    SubstrateEd25519Addr, SubstrateEd25519AddrDecoder, SubstrateEd25519AddrEncoder,
+    SuiAddr, SuiAddrDecoder, SuiAddrEncoder, TrxAddr,
     TrxAddrDecoder, TrxAddrEncoder, XlmAddr, XlmAddrDecoder, XlmAddrEncoder, XlmAddrTypes, XmrAddr, XmrAddrDecoder,
     XmrAddrEncoder, XmrIntegratedAddr, XmrIntegratedAddrDecoder, XmrIntegratedAddrEncoder, XrpAddr, XrpAddrDecoder,
     XrpAddrEncoder, XtzAddr, XtzAddrDecoder, XtzAddrEncoder, XtzAddrPrefixes, ZilAddr, ZilAddrDecoder, ZilAddrEncoder
@@ -96,7 +99,6 @@ from bip_utils.ecc import (
     Ed25519MoneroPrivateKey, Ed25519MoneroPublicKey, Ed25519Point, Ed25519PrivateKey, Ed25519PublicKey,
     EllipticCurveGetter, EllipticCurveTypes, IPoint, IPrivateKey, IPublicKey, Nist256p1, Nist256p1Point,
     Nist256p1PrivateKey, Nist256p1PublicKey, Secp256k1, Secp256k1Point, Secp256k1PrivateKey, Secp256k1PublicKey,
-    Sr25519, Sr25519Point, Sr25519PrivateKey, Sr25519PublicKey
 )
 
 # Electrum wallet
@@ -140,7 +142,7 @@ from bip_utils.ss58 import SS58ChecksumError, SS58Decoder, SS58Encoder
 
 # Substrate
 from bip_utils.substrate import (
-    Substrate, SubstrateKeyError, SubstratePath, SubstratePathElem, SubstratePathError, SubstratePathParser,
+    SubstrateKeyError, SubstratePath, SubstratePathElem, SubstratePathError, SubstratePathParser,
     SubstratePrivateKey, SubstratePublicKey
 )
 
